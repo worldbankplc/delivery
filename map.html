@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shipment Tracking</title>
+  <link rel="stylesheet" href="map.css">
+    <body>
+  <header class="navbar">
+    <div class="logo">
+      <img src="lo.png" class="icon"></img>
+      <span><strong>FLY AIRWAYS DELIVERY</strong></span>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="About.html">About</a>
+      <a href="help.html">Help</a>
+    </nav>
+  </header>
+
+<section class="track">
+      <div class="tracking">
+      <h4>Tarcking Number<br>FAD-2179902M7</h4>
+</section>
+
+<section class="map">
+  <img src="co.png" alt="map">
+</section>
+
+<section class="sectiontwo">
+  <div class="timeline">
+    <div class="event">
+      <div class="dot green"></div>
+      <div class="date">Mon, 24 November 2025</div>
+      <div>Shipment Ready To Be Delivered to France from USA</div>
+    </div>
+
+
+        <div class="event">
+      <div class="dot red"></div>
+      <div class="date">Tue, 25 November 2025</div>
+      <div>Package on its way to France</div>
+    </div>
+
+    <div class="event">
+      <div class="dot blue"></div>
+      <div class="date">Wed, 26 November, 2025</div>
+      <div>Item Arrived At Bordeaux–Mérignac Aéroport</div>
+    </div>
+
+    <div class="event">
+      <div class="dot blue"></div>
+      <div class="date">Wed, 26 November, 2025</div>
+      <div>Ready To Be Delivered at 13 aller du clair logie bat c2 app03 33700 merignac, France.</div>
+    </div>
+  </div>
+  </section>
+
+  <section class="sectionthree">
+    <div class="button">
+    <a href="details.html"><button type="butto">View package details</button></a>
+  
+  </section>
+
+
+
+  <div class="barcode">
+    <img src="https://barcode.tec-it.com/barcode.ashx?data=2601729756&code=Code128&translate-esc=on" alt="Barcode">
+  </div>
+
+</body>
+</html>
+
+
+    <script>
+const params = new URLSearchParams(window.location.search);
+const code = params.get("track");
+
+if (code) {
+document.getElementById("trackingInfo").textContent = `Your tracking number is: ${code}`;
+} else {
+document.getElementById("trackingInfo").textContent = "No tracking number provided.";
+}
+</script>
+
+<script>
+// Convert "Mon, 24 November 2024" → a real JS Date
+function parseEventDate(dateText) {
+  const clean = dateText.replace(/,/g, ""); // remove extra commas
+  return new Date(clean);
+}
+
+// Get current date in France timezone
+function getFranceDate() {
+  const options = { 
+    timeZone: 'Europe/Paris',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'short'
+  };
+  return new Date().toLocaleDateString('en-US', options);
+}
+
+function updateTimelineDots() {
+  const currentFranceDate = new Date(getFranceDate()).toDateString();
+  const events = document.querySelectorAll('.timeline .event');
+
+  events.forEach(event => {
+    const dateDiv = event.querySelector('.date');
+    const dot = event.querySelector('.dot');
+
+    const eventDate = parseEventDate(dateDiv.textContent.trim()).toDateString();
+
+    // Reset dot first (so only the correct one turns blue)
+    dot.style.backgroundColor = "";
+
+    // Highlight if today's date matches
+    if (eventDate === currentFranceDate) {
+      dot.style.backgroundColor = "blue";
+    }
+
+    // --- Permanent rule for Wed, 26 November 2025 ---
+    const lockDate = new Date("2025-11-26").toDateString();
+    if (eventDate === lockDate) {
+      if (new Date(currentFranceDate) >= new Date(lockDate)) {
+        dot.style.backgroundColor = "blue"; // stays blue forever
+      }
+    }
+  });
+}
+
+// Run now + hourly
+updateTimelineDots();
+setInterval(updateTimelineDots, 60 * 60 * 1000);
+</script>
+
+
+
+
+
+
+
+
+
+  </div>
+</body>
+</html>
